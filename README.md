@@ -44,7 +44,7 @@ The Data I put in the neural network origin from : https://ourworldindata.org/co
 The .xlsx file in this project is modified to contain only Greece's data and specific columns. If you wish on working on this on your own, please download the latest version from the source above, to have the most recent and up-to-date data to work with. It is important to note that this can work for any country you want or any data you wish to put into (with the proper modification of course).
 
 
-One of the biggest pros of this project is that it does not suffer from overfitting bias. In fact, if you run the showOverfittingBias() method, you will see that it projects COVID-19 cases for other countries with the same accuracy with Greece; even though the ANN has never interacted with the specified Data, while training.
+One of the biggest pros of this project is that it does not suffer from overfitting bias. In fact, if you modify the code and test it with foreign data, you will see that it projects COVID-19 cases for other countries with the same accuracy with Greece; even though the ANN has never interacted with the specified Data, while training. *A method will be uploaded soon*
 
 
 
