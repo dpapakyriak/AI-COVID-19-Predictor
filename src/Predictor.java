@@ -129,8 +129,6 @@ public class Predictor {
 				}
 			}
 		}
-		System.out.println("Max: " + maxNewCases);
-		System.out.println("Maxes were found!");
 	}
 
 	public static void main(String[] args) {
