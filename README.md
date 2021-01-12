@@ -53,10 +53,10 @@ Credits:
 
 As a sophomore Management Science and Technology student, it is very demandful and hard to create a proper Neural Network for such a complex problem, such as COVID-19. The knowledge I acquired came from personal research. However, I need to recognise:
 
-Michał Wieczorek
-Jakub Siłka
-Marcin Woz ́niak
-Suyash Sonawane
+-Michał Wieczorek
+-Jakub Siłka
+-Marcin Woz ́niak
+-Suyash Sonawane
 
 as their personal research and knowledge on the matter, helped me a lot into understanding the complexity of ANN.
 
