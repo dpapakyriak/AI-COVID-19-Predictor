@@ -4,14 +4,14 @@ A Java Personal Project, purposed to create an Artificial Neural Network (ANN) t
 
 This Artificial Neural Network consists of:
 
-- 1 input layer of seven data inputs
-- 2 hidden layers
+- 1 input layer of twelve data inputs
+- 2 hidden layers size 16
 - 1 output layer of one value (projected COVID-19 new cases for the next day)
 
 
 
 
-In this project, we give 7 type of data to the NN:
+In this project, we give 12 type of data to the NN:
 
   1. Total active cases per day
   2. Daily new cases
@@ -20,6 +20,11 @@ In this project, we give 7 type of data to the NN:
   5. Total covid-19 tests until today
   6. Positive rate
   7. Tests until positive case
+  8. Total number of Vaccinations
+  9. Total number of people Vaccinated
+  10. Number of people fully vaccinated
+  11. Number of daily new vaccinations
+  12. Stringency index
   
   
 The output is the NN's prediction for the number of new cases that Greece is going to have in the next day.
@@ -58,7 +63,7 @@ As a sophomore Management Science and Technology student, it is very demandful a
 -Marcin Woz ́niak
 -Suyash Sonawane
 
-as their personal research and knowledge on the matter, helped me a lot into understanding the complexity of ANN.
+as their personal research, scientific papers, and knowledge on the matter, helped me a lot into understanding the complexity of A.N.N.
 
 
 
