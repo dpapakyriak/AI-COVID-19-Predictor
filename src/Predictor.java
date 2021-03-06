@@ -36,18 +36,25 @@ public class Predictor {
 	static double maxNewTests;
 	static double maxTotalTests;
 	static double maxTestsPerCase;
+	static double maxTotalVacc;
+	static double maxPeopleVaccinated;
+	static double maxPeopleFullyVaccinated;
+	static double maxNewVaccinations;
+	static double maxStringencyIndex;
 
 	static double nextDayPrediction;
 
 	private JFrame frame;
 	private AiPanel panel;
-	private JLabel nextDay;
+	private JLabel blue;
+	private JLabel orange;
+	
 
 	public void processData(int x) throws IOException { // reads MS Excel Data
 		FileInputStream fis = new FileInputStream(new File("/Users/dimitrispapakyriakopoylos/Documents/greece.xlsx"));
 		XSSFWorkbook wb = new XSSFWorkbook(fis);
 		XSSFSheet sheet = wb.getSheetAt(x);
-		covidData = new double[sheet.getLastRowNum() - 1][7];
+		covidData = new double[sheet.getLastRowNum() - 1][12];
 		int i;
 		System.out.println("Processing data...");
 		for (i = 1; i <= sheet.getLastRowNum() - 1; i++) {
@@ -58,6 +65,11 @@ public class Predictor {
 			covidData[i - 1][4] = (double) ReadCellDataN(i, 6);
 			covidData[i - 1][5] = (double) ReadCellDataN(i, 7);
 			covidData[i - 1][6] = (double) ReadCellDataN(i, 8);
+			covidData[i - 1][7] = (double) ReadCellDataN(i, 9);
+			covidData[i - 1][8] = (double) ReadCellDataN(i, 10);
+			covidData[i - 1][9] = (double) ReadCellDataN(i, 11);
+			covidData[i - 1][10] = (double) ReadCellDataN(i, 12);
+			covidData[i - 1][11] = (double) ReadCellDataN(i, 13);
 
 		}
 		targetData = new double[sheet.getLastRowNum() - 1][1];
@@ -74,6 +86,11 @@ public class Predictor {
 			covidData[i - 1][3] /= maxNewTests;
 			covidData[i - 1][4] /= maxTotalTests;
 			covidData[i - 1][6] /= maxTestsPerCase;
+			covidData[i - 1][7] /= maxTotalVacc;
+			covidData[i - 1][8] /= maxPeopleVaccinated;
+			covidData[i - 1][9] /= maxPeopleFullyVaccinated;
+			covidData[i - 1][10] /= maxNewVaccinations;
+			covidData[i - 1][11] /= maxStringencyIndex;
 
 		}
 		for (i = 2; i <= sheet.getLastRowNum(); i++) {
@@ -98,10 +115,15 @@ public class Predictor {
 		maxNewTests = ReadCellDataN(1, 5);
 		maxTotalTests = ReadCellDataN(1, 6);
 		maxTestsPerCase = ReadCellDataN(1, 8);
+		maxTotalVacc = ReadCellDataN(1, 9);
+		maxPeopleVaccinated = ReadCellDataN(1, 10);
+		maxPeopleFullyVaccinated = ReadCellDataN(1, 11);
+		maxNewVaccinations = ReadCellDataN(1, 12);
+		maxStringencyIndex = ReadCellDataN(1, 13);
 		int i, j;
 		double[] temp = new double[covidData.length];
-		for (i = 0; i < 7; i++) {
-			if (i != 7) {
+		for (i = 0; i < 12; i++) {
+			if (i != 5) {
 				for (j = 0; j < covidData.length; j++) {
 					temp[j] = covidData[j][i];
 				}
@@ -126,9 +148,26 @@ public class Predictor {
 				case 6:
 					maxTestsPerCase = temp[temp.length - 1];
 					break;
+				case 7:
+						maxTotalVacc = temp[temp.length - 1];
+						break;
+				case 8:
+					maxPeopleVaccinated = temp[temp.length - 1];
+						break;
+				case 9:
+					maxPeopleFullyVaccinated = temp[temp.length - 1];
+						break;
+				case 10:
+					maxNewVaccinations = temp[temp.length - 1];
+						break;
+				case 11:
+					maxStringencyIndex = temp[temp.length - 1];
+						break;
 				}
 			}
 		}
+		System.out.println("Max: " + maxNewCases);
+		System.out.println("Maxes were found!");
 	}
 
 	public static void main(String[] args) {
@@ -139,22 +178,20 @@ public class Predictor {
 			e.printStackTrace();
 		}
 		System.out.println("Training Neural Network...");
-		NeuralNetwork ai = new NeuralNetwork(7, 16, 1);
-		ai.fit(covidData, targetData, 5000000);
+		NeuralNetwork ai = new NeuralNetwork(12, 16, 1); 	// Create the A.N.N.
+		ai.fit(covidData, targetData, 5000000); 	//Train the A.N.N.
 		System.out.println("Training was completed!");
 		int i;
-		double[] error = new double[covidData.length];
+		double[] errors = new double[covidData.length];
 		double[] w = new double[covidData.length];
 		for (i = 0; i < covidData.length; i++) {
 			List<Double> output = ai.predict(covidData[i]);
 			w[i] = output.get(0) * maxNewCases;
 			targetData[i][0] *= maxNewCases;
-			error[i] = (w[i] / targetData[i][0]) - 1;
+			errors[i] = Math.pow((w[i] - targetData[i][0]), 2);
 		}
-		covidData[covidData.length - 1][1] = targetData[covidData.length - 1][0];
-		List<Double> output = ai.predict(covidData[covidData.length - 1]);
-		nextDayPrediction = output.get(0) * maxNewCases;
-		Results.setResults(w, targetData, error, maxNewCases);
+		Results.setResults(w, targetData, errors, maxNewCases);
+		Results.showStats();
 		obj.makePage();
 
 	}
@@ -163,23 +200,21 @@ public class Predictor {
 
 		// GUI frame and panel creation
 		frame = new JFrame();
-		frame.setSize(800, 800);
+		frame.setBounds(400, 0, 1000, 1000);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Program ends when we close the window
 		frame.setTitle("Covid-19 Prediction AI version 1 @2020");
 		panel = new AiPanel();
+		
+		blue = new JLabel("Blue: Artificial Neural Network's predictions");
+		blue.setBounds(130, 800, 300, 40);
+		frame.add(blue);
+		
+		orange = new JLabel("Orange: Real Data");
+		orange.setBounds(130, 850, 300, 40);
+		frame.add(orange);
+		
 		frame.add(panel);
-
-		// Set the frame to be appeared always in the center of the screen, regardless
-		// monitor
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setLocation(dim.width / 2 - frame.getSize().width / 2, dim.height - 900);
-
-		nextDay = new JLabel("Prediction for tomorrow: " + Double.toString(nextDayPrediction));
-		nextDay.setFont(new Font("Arial", Font.PLAIN, 14));
-		nextDay.setForeground(Color.BLACK);
-		nextDay.setBounds(500, 30, 250, 20);
-		panel.add(nextDay);
 
 		frame.setVisible(true);
 
@@ -196,6 +231,11 @@ public class Predictor {
 		wb.close();
 		return value; // returns the cell value
 	}
+	
+	
+	
+	
+	
 
 }
 

@@ -24,10 +24,10 @@ public class AiPanel extends JPanel {
 	      super.paintComponent(g);
 	    
 	      g.setColor(Color.WHITE);
-	      g.fillRect(0, 0, 800, 800);
+	      g.fillRect(0, 0, 1000, 1000);
 	      g.setColor(Color.BLACK);
 	      g.fillRect(100, 100, 2, 600);
-	      g.fillRect(100, 700, 600, 2);
+	      g.fillRect(100, 700, 800, 2);
 	      int i;
 	      int y1, y2;
 	      for (i = 0; i < Results.aiPredictions.length - 1; i++) {
